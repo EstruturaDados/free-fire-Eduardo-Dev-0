@@ -3,68 +3,188 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-// Código da Ilha – Edição Free Fire
-// Nível: Mestre
-// Este programa simula o gerenciamento avançado de uma mochila com componentes coletados durante a fuga de uma ilha.
-// Ele introduz ordenação com critérios e busca binária para otimizar a gestão dos recursos.
+#define MAX_STR_LEN 50
+#define TAM_MAX 10
+
+typedef struct {
+    char dados [TAM_MAX][MAX_STR_LEN];
+    int quantidade;
+} ListaEstatica;
+
+void inicializarListaEstatica(ListaEstatica *lista);
+
+void inserirListaEstatica(ListaEstatica *lista, const char* texto);
+void removerListaEstatica(ListaEstatica *lista, const char* texto);
+void listarListaEstatica(const ListaEstatica *lista);
+
+typedef struct No {
+    char* dado;
+    struct No *proximo;
+} No;
+
+typedef No* ListaEncadeada;
+
+void inicializarListaEstatica(listaEncadeada *lista, const char* texto);
+
+void inserirListaEncadeada(ListaEndadeada *lista, const char* texto);
+void removerListaEstatica(listaEncadeada *lista, const char* texto);
+void listarListaEstatica(const ListaEncadeada *lista);
+void liberarListaEncadeada(ListaEncadeada *lista);
+
+void menuListaEstatica();
+void menuListaEncadeada();
 
 int main() {
-    // Menu principal com opções:
-    // 1. Adicionar um item
-    // 2. Remover um item
-    // 3. Listar todos os itens
-    // 4. Ordenar os itens por critério (nome, tipo, prioridade)
-    // 5. Realizar busca binária por nome
-    // 0. Sair
+    int opcao;
+    do{
+        printf("\n--- MANIPULACAO DE LISTAS (TEXTO) ---\N");
+        printf("1. Lista Estatica\n");
+        printf("2. Lista Encadeada\n");
+        printf("0. Sair do Programa\n");
+        printf("Esolha Uma opcao\n");
+        scanf("%d", &opcao);
 
-    // A estrutura switch trata cada opção chamando a função correspondente.
-    // A ordenação e busca binária exigem que os dados estejam bem organizados.
+        switch (opcao) {
+            case 1:
+                menuListaEstatica();
+                break;
+            case 2:
+                menuListaEncadeada();
+                break;
+            case 0:
+                printf("Saindo...\n");
+                break;
+            default:
+                printf("opcao Invalida!\n");
+        }
+    } while (opcao != 0);
 
     return 0;
 }
 
-// Struct Item:
-// Representa um componente com nome, tipo, quantidade e prioridade (1 a 5).
-// A prioridade indica a importância do item na montagem do plano de fuga.
+void inicializarListaEstatica(listaEstatica *lista) {
+    lista->quantidade = 0;
+}
 
-// Enum CriterioOrdenacao:
-// Define os critérios possíveis para a ordenação dos itens (nome, tipo ou prioridade).
+void inserirListaEstatica(ListaEstatica *lista, const char* texto) {
+    if (lista->quantidade == TAM_MAX) {
+        printf("Erro: Lista Cheia! Nao e possivel inserir.\n");
+        return;
+    }
 
-// Vetor mochila:
-// Armazena até 10 itens coletados.
-// Variáveis de controle: numItens (quantidade atual), comparacoes (análise de desempenho), ordenadaPorNome (para controle da busca binária).
+    strcpy(lista->dados[lista->quantidade], texto);
+    lista->quantidade++;
+    printf("texto \"%s\ inserido com sucesso.\n", texto);
+}
 
-// limparTela():
-// Simula a limpeza da tela imprimindo várias linhas em branco.
+void removerListaEstatica(ListaEstatica *lista, const char* texto) {
+    int i, pos = -1;
+    for (i = 0; i < lista->quantidade; i++) {
+        if (strcmp(lista->dados[i], texto) == 0) {
+            pos = i;
+            break;
+        }
+    }
 
-// exibirMenu():
-// Apresenta o menu principal ao jogador, com destaque para status da ordenação.
+    if (pos == -1) {
+        printf("Erro: Texto \"s\" nao encontrado na lista.\n", texto);
+        return;
+    }
 
-// inserirItem():
-// Adiciona um novo componente à mochila se houver espaço.
-// Solicita nome, tipo, quantidade e prioridade.
-// Após inserir, marca a mochila como "não ordenada por nome".
+    for(i = pos; i < lista->quantidade - 1; i++) {
+        strcpy(lista->dados[i], lista->dados[i + 1]);
+    }
 
-// removerItem():
-// Permite remover um componente da mochila pelo nome.
-// Se encontrado, reorganiza o vetor para preencher a lacuna.
+    lista->quantidade--;
+    printf("Texto \"%s\" removido com sucesso.\n", texto);
+}
 
-// listarItens():
-// Exibe uma tabela formatada com todos os componentes presentes na mochila.
+void listarListaEstatica(const ListaEstatica *lista) {
+    if (lista->quantidade == 0) {
+        printf ("A Lista Estatica Esta Vazia.\n");
+        return;
+    }
+    printf("itens da lista Estatica: [ ");
+    for (int i = 0; i < lista->quantidade; i++) {
+        printf("\"%s\" ", lista->dados[i]);
+    }
+    printf("]\n");
+}
 
-// menuDeOrdenacao():
-// Permite ao jogador escolher como deseja ordenar os itens.
-// Utiliza a função insertionSort() com o critério selecionado.
-// Exibe a quantidade de comparações feitas (análise de desempenho).
+void inicializarListaEncadeada(ListaEncadeada *lista) {
+    *lista = NULL;
+}
 
-// insertionSort():
-// Implementação do algoritmo de ordenação por inserção.
-// Funciona com diferentes critérios de ordenação:
-// - Por nome (ordem alfabética)
-// - Por tipo (ordem alfabética)
-// - Por prioridade (da mais alta para a mais baixa)
+void inserirListaEncadeada(ListaEncadeada *lista, const char* texto) {
+    No* novoNo = (No*) malloc(sizeof(No));
 
-// buscaBinariaPorNome():
-// Realiza busca binária por nome, desde que a mochila esteja ordenada por nome.
-// Se encontrar, exibe os dados do item buscado.
-// Caso contrário, informa que não encontrou o item.
+    if (novoNo == NULL) {
+        printf("Erro: Falha na alocacao de memoria para o no.\n");
+        return;
+    }
+
+    novoNo->dado = (char*) malloc(strlen(texto) + 1);
+
+    if (novoNo->dado == NULL) {
+        printf("Erro: Falha na alocacao de memoria para o texto.\n");
+        free(novoNo);
+        return;
+    }
+
+    strcpy(novoNo->dado, texto);
+
+    novoNo->proximo = *lista;
+
+    *lista = novoNo;
+
+    printf("Texto \"%s\" inserido com sucesso.\n", texto);
+}
+
+void removerListaEncadeada(ListaEncadeada *lista, const char* texto) {
+    No*atual = *lista;
+    No *anterior = NULL;
+
+    while (atual != NULL && strcmp(atual->dado, texto) != 0) {
+        anterior = atual;
+        atual = atual->proximo;
+    }
+
+    if (atual == NULL) {
+        printf("Erro: Texto \"%s\" nao encontrado na lista. \n", texto);
+        return;
+    }
+
+    if(anterior == NULL) {
+        *lista = atual->proximo;
+    } else {
+        anterior->proximo = atual->proximo;
+    }
+
+    free(atual->dado);
+
+    free(atual);
+    printf("Texto \"%s\" removido com sucesso.\n", texto);
+}
+
+void listarListaEncadeada(const ListaEncadeada lista) {
+    No *temp = lista;
+    if (temp == NULL) {
+        printf("A lista encadeada esta vazia.\n");
+        return
+    }
+    printf("Itens da lista Encadeada: [ ");
+    while (temp != NULL) {
+        printf("\%s\" ", temp->dado);
+        temp = temp->proximo;
+    }
+    printf("]\n");
+}
+
+void liberarListaEncadeada(ListaEncadeada *lista) {
+    No *atual = *lista;
+    No *proximo;
+    while(atual !=NULL) {
+        proximo = atual->proximo;
+        free(atual->dado);
+    }
+}
