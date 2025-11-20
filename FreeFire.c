@@ -24,11 +24,11 @@ typedef struct No {
 
 typedef No* ListaEncadeada;
 
-void inicializarListaEstatica(listaEncadeada *lista, const char* texto);
+void inicializarListaEncadeada(ListaEncadeada *lista);
 
-void inserirListaEncadeada(ListaEndadeada *lista, const char* texto);
-void removerListaEstatica(listaEncadeada *lista, const char* texto);
-void listarListaEstatica(const ListaEncadeada *lista);
+void inserirListaEncadeada(ListaEncadeada *lista, const char* texto);
+void removerListaEncadeada(ListaEncadeada *lista, const char* texto);
+void listarListaEncadeada(const ListaEncadeada *lista);
 void liberarListaEncadeada(ListaEncadeada *lista);
 
 void menuListaEstatica();
@@ -37,7 +37,7 @@ void menuListaEncadeada();
 int main() {
     int opcao;
     do{
-        printf("\n--- MANIPULACAO DE LISTAS (TEXTO) ---\N");
+        printf("\n--- MANIPULACAO DE LISTAS (TEXTO) ---\n");
         printf("1. Lista Estatica\n");
         printf("2. Lista Encadeada\n");
         printf("0. Sair do Programa\n");
@@ -62,7 +62,7 @@ int main() {
     return 0;
 }
 
-void inicializarListaEstatica(listaEstatica *lista) {
+void inicializarListaEstatica(ListaEstatica *lista) {
     lista->quantidade = 0;
 }
 
@@ -74,7 +74,7 @@ void inserirListaEstatica(ListaEstatica *lista, const char* texto) {
 
     strcpy(lista->dados[lista->quantidade], texto);
     lista->quantidade++;
-    printf("texto \"%s\ inserido com sucesso.\n", texto);
+    printf("Texto \"%s\" inserido com sucesso.\n", texto);
 }
 
 void removerListaEstatica(ListaEstatica *lista, const char* texto) {
@@ -87,7 +87,7 @@ void removerListaEstatica(ListaEstatica *lista, const char* texto) {
     }
 
     if (pos == -1) {
-        printf("Erro: Texto \"s\" nao encontrado na lista.\n", texto);
+        printf("Erro: Texto \"%s\" nao encontrado na lista.\n", texto);
         return;
     }
 
@@ -170,7 +170,7 @@ void listarListaEncadeada(const ListaEncadeada lista) {
     No *temp = lista;
     if (temp == NULL) {
         printf("A lista encadeada esta vazia.\n");
-        return
+        return;
     }
     printf("Itens da lista Encadeada: [ ");
     while (temp != NULL) {
