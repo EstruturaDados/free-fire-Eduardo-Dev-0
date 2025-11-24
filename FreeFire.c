@@ -3,11 +3,12 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define MAX_STR_LEN 50
-#define TAM_MAX 10
+#define MAX_STR_LEN 30
+#define TAM_MAX 20
 
 typedef struct {
-    char dados [TAM_MAX][MAX_STR_LEN];
+    char nome [MAX_STR_LEN];
+    char tipo [TAM_MAX];
     int quantidade;
 } ListaEstatica;
 
@@ -22,34 +23,27 @@ typedef struct No {
     struct No *proximo;
 } No;
 
-typedef No* ListaEncadeada;
 
-void inicializarListaEncadeada(ListaEncadeada *lista);
-
-void inserirListaEncadeada(ListaEncadeada *lista, const char* texto);
-void removerListaEncadeada(ListaEncadeada *lista, const char* texto);
-void listarListaEncadeada(const ListaEncadeada *lista);
-void liberarListaEncadeada(ListaEncadeada *lista);
-
-void menuListaEstatica();
-void menuListaEncadeada();
 
 int main() {
     int opcao;
     do{
-        printf("\n--- MANIPULACAO DE LISTAS (TEXTO) ---\n");
-        printf("1. Lista Estatica\n");
-        printf("2. Lista Encadeada\n");
+        printf("\n--- INVENTARIO DO JOGADOR (TEXTO) ---\n");
+        printf("1. Adicionar item\n");
+        printf("2. listar itens do jogador\n");
+        printf("3. remover itens do jogador\n");
         printf("0. Sair do Programa\n");
         printf("Esolha Uma opcao\n");
         scanf("%d", &opcao);
 
         switch (opcao) {
             case 1:
-                menuListaEstatica();
+                inserirListaEstatica;
                 break;
             case 2:
-                menuListaEncadeada();
+                listarListaEstatica;
+            case 3:
+                removerListaEstatica;
                 break;
             case 0:
                 printf("Saindo...\n");
@@ -72,7 +66,7 @@ void inserirListaEstatica(ListaEstatica *lista, const char* texto) {
         return;
     }
 
-    strcpy(lista->dados[lista->quantidade], texto);
+    strcpy(lista->nome[lista->quantidade], texto);
     lista->quantidade++;
     printf("Texto \"%s\" inserido com sucesso.\n", texto);
 }
@@ -80,7 +74,7 @@ void inserirListaEstatica(ListaEstatica *lista, const char* texto) {
 void removerListaEstatica(ListaEstatica *lista, const char* texto) {
     int i, pos = -1;
     for (i = 0; i < lista->quantidade; i++) {
-        if (strcmp(lista->dados[i], texto) == 0) {
+        if (strcmp(lista->nome[i], texto) == 0) {
             pos = i;
             break;
         }
@@ -92,7 +86,7 @@ void removerListaEstatica(ListaEstatica *lista, const char* texto) {
     }
 
     for(i = pos; i < lista->quantidade - 1; i++) {
-        strcpy(lista->dados[i], lista->dados[i + 1]);
+        strcpy(lista->nome[i], lista->nome[i + 1]);
     }
 
     lista->quantidade--;
@@ -106,85 +100,7 @@ void listarListaEstatica(const ListaEstatica *lista) {
     }
     printf("itens da lista Estatica: [ ");
     for (int i = 0; i < lista->quantidade; i++) {
-        printf("\"%s\" ", lista->dados[i]);
+        printf("\"%s\" ", lista->nome[i]);
     }
     printf("]\n");
-}
-
-void inicializarListaEncadeada(ListaEncadeada *lista) {
-    *lista = NULL;
-}
-
-void inserirListaEncadeada(ListaEncadeada *lista, const char* texto) {
-    No* novoNo = (No*) malloc(sizeof(No));
-
-    if (novoNo == NULL) {
-        printf("Erro: Falha na alocacao de memoria para o no.\n");
-        return;
-    }
-
-    novoNo->dado = (char*) malloc(strlen(texto) + 1);
-
-    if (novoNo->dado == NULL) {
-        printf("Erro: Falha na alocacao de memoria para o texto.\n");
-        free(novoNo);
-        return;
-    }
-
-    strcpy(novoNo->dado, texto);
-
-    novoNo->proximo = *lista;
-
-    *lista = novoNo;
-
-    printf("Texto \"%s\" inserido com sucesso.\n", texto);
-}
-
-void removerListaEncadeada(ListaEncadeada *lista, const char* texto) {
-    No*atual = *lista;
-    No *anterior = NULL;
-
-    while (atual != NULL && strcmp(atual->dado, texto) != 0) {
-        anterior = atual;
-        atual = atual->proximo;
-    }
-
-    if (atual == NULL) {
-        printf("Erro: Texto \"%s\" nao encontrado na lista. \n", texto);
-        return;
-    }
-
-    if(anterior == NULL) {
-        *lista = atual->proximo;
-    } else {
-        anterior->proximo = atual->proximo;
-    }
-
-    free(atual->dado);
-
-    free(atual);
-    printf("Texto \"%s\" removido com sucesso.\n", texto);
-}
-
-void listarListaEncadeada(const ListaEncadeada lista) {
-    No *temp = lista;
-    if (temp == NULL) {
-        printf("A lista encadeada esta vazia.\n");
-        return;
-    }
-    printf("Itens da lista Encadeada: [ ");
-    while (temp != NULL) {
-        printf("\%s\" ", temp->dado);
-        temp = temp->proximo;
-    }
-    printf("]\n");
-}
-
-void liberarListaEncadeada(ListaEncadeada *lista) {
-    No *atual = *lista;
-    No *proximo;
-    while(atual !=NULL) {
-        proximo = atual->proximo;
-        free(atual->dado);
-    }
 }
